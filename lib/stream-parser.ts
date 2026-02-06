@@ -82,7 +82,24 @@ export class StreamParser {
 
   getResult(): ReviewResult | null {
     try {
-      const parsed = JSON.parse(this.buffer.trim());
+      // Strip markdown code fences if present
+      let cleaned = this.buffer.trim();
+
+      // Remove ```json or ``` at start
+      if (cleaned.startsWith("```json")) {
+        cleaned = cleaned.substring(7);
+      } else if (cleaned.startsWith("```")) {
+        cleaned = cleaned.substring(3);
+      }
+
+      // Remove ``` at end
+      if (cleaned.endsWith("```")) {
+        cleaned = cleaned.substring(0, cleaned.length - 3);
+      }
+
+      cleaned = cleaned.trim();
+
+      const parsed = JSON.parse(cleaned);
       const annotations: Annotation[] = (parsed.annotations || []).map(
         (a: Record<string, unknown>, i: number) => ({
           id: `ann-${i + 1}`,
@@ -137,6 +154,10 @@ export class StreamParser {
   reset(): void {
     this.buffer = "";
     this.annotationCount = 0;
+  }
+
+  getRawBuffer(): string {
+    return this.buffer;
   }
 }
 

@@ -17,6 +17,7 @@ import { useReview } from "@/lib/hooks/useReview";
 import { useAnnotations } from "@/lib/hooks/useAnnotations";
 import { useFixer } from "@/lib/hooks/useFixer";
 import { detectMode } from "@/lib/detect-mode";
+import { generateId } from "@/lib/uuid";
 import type { HistoryEntry, HighlightedLine, Annotation } from "@/types";
 
 export default function Home() {
@@ -37,7 +38,7 @@ export default function Home() {
 
       // Add to history
       const entry: HistoryEntry = {
-        id: crypto.randomUUID(),
+        id: generateId(),
         code: review.code,
         language: review.language,
         result: review.review,

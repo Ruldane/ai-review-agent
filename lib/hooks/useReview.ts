@@ -137,6 +137,11 @@ export function useReview(): UseReviewReturn {
         result.annotations = validateAnnotations(result.annotations, lineCount);
         setReview(result);
       } else {
+        // Log the raw buffer for debugging
+        const rawBuffer = parser.getRawBuffer();
+        console.error("Failed to parse review response. Raw buffer length:", rawBuffer.length);
+        console.error("Raw buffer preview (first 500 chars):", rawBuffer.substring(0, 500));
+        console.error("Raw buffer preview (last 500 chars):", rawBuffer.substring(Math.max(0, rawBuffer.length - 500)));
         throw new Error("Failed to parse review response");
       }
     } catch (err) {
